@@ -67,7 +67,6 @@ export default class App extends Component {
         currentPage: prevState.currentPage + 1,
       }));
       event.target.serach.value = '';
-      window.scrollTo(0, 0);
     }
   };
 
