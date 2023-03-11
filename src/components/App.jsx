@@ -30,8 +30,10 @@ export default class App extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.searchQuery !== this.state.searchQuery) {
+      console.log(1);
       this.handleGetImages();
     } else if (prevState.currentPage !== this.state.currentPage) {
+      console.log(2);
       getImages(this.state.searchQuery, this.state.currentPage)
         .then(res =>
           this.setState(prevState => ({
@@ -41,6 +43,20 @@ export default class App extends Component {
         )
         .catch(error => this.setState({ error, status: statusList.error }));
     }
+    // else if (
+    //   prevState.currentPage !== this.state.currentPage &&
+    //   prevState.searchQuery === this.state.searchQuery
+    // ) {
+    //   console.log(3);
+    //   getImages(this.state.searchQuery, this.state.currentPage)
+    //     .then(res =>
+    //       this.setState(prevState => ({
+    //         images: [...res.data.hits],
+    //         status: statusList.success,
+    //       }))
+    //     )
+    //     .catch(error => this.setState({ error, status: statusList.error }));
+    // }
   }
 
   handleGetImages = () => {
@@ -58,9 +74,17 @@ export default class App extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    this.setState({ searchQuery: event.target.serach.value, currentPage: 1 });
-    event.target.serach.value = '';
-    window.scrollTo(0, 0);
+    if (this.state.searchQuery !== event.target.serach.value) {
+      this.setState({ searchQuery: event.target.serach.value, currentPage: 1 });
+      event.target.serach.value = '';
+      window.scrollTo(0, 0);
+    } else if (this.state.searchQuery === event.target.serach.value) {
+      this.setState(prevState => ({
+        currentPage: prevState.currentPage + 1,
+      }));
+      event.target.serach.value = '';
+      window.scrollTo(0, 0);
+    }
   };
 
   setModalImg = id => {
