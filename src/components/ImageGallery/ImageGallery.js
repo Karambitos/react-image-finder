@@ -1,11 +1,20 @@
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 import styles from '../ImageGallery/ImageGallery.module.css';
 import PropTypes from 'prop-types';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function ImageGallery({ images, setModalImg }) {
   return (
     <ul className={styles.gallery}>
-      <ImageGalleryItem images={images} setModalImg={setModalImg} />
+      {images.map(image => {
+        return (
+          <ImageGalleryItem
+            key={uuidv4()}
+            image={image}
+            setModalImg={setModalImg}
+          />
+        );
+      })}
     </ul>
   );
 }

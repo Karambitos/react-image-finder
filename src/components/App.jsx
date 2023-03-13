@@ -20,7 +20,7 @@ export default class App extends Component {
     searchQuery: '',
     currentPage: 1,
     isOpen: false,
-    imageModal: [],
+    imageModal: {},
     status: statusList.idle,
   };
 
@@ -30,16 +30,10 @@ export default class App extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.searchQuery !== this.state.searchQuery) {
+      this.setState({ images: [] });
       this.handleGetImages();
     } else if (prevState.currentPage !== this.state.currentPage) {
-      getImages(this.state.searchQuery, this.state.currentPage)
-        .then(res =>
-          this.setState(prevState => ({
-            images: [...prevState.images, ...res.data.hits],
-            status: statusList.success,
-          }))
-        )
-        .catch(error => this.setState({ error, status: statusList.error }));
+      this.handleGetImages();
     }
   }
 
@@ -47,11 +41,11 @@ export default class App extends Component {
     this.setState({ status: statusList.loading });
     getImages(this.state.searchQuery, this.state.currentPage)
       .then(res =>
-        this.setState({
-          images: res.data.hits,
+        this.setState(prevState => ({
+          images: [...prevState.images, ...res.data.hits],
           status: statusList.success,
           resaltLength: res.data.totalHits,
-        })
+        }))
       )
       .catch(error => this.setState({ error, status: statusList.error }));
   };
